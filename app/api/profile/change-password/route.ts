@@ -1,33 +1,46 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from 'lib/supabaseClient'
+import bcrypt from 'bcryptjs'
 
 export async function PUT(request: NextRequest) {
   try {
-    const profileData = await request.json()
+    const { email, oldPassword, newPassword } = await request.json()
 
-    if (!profileData.email) {
-      return NextResponse.json({ error: 'Missing profile data' }, { status: 400 })
+    if (!email || !oldPassword || !newPassword) {
+      return NextResponse.json({ error: 'Missing password data' }, { status: 400 })
     }
 
-    // Update profile in Supabase
-    const { data, error } = await supabase
-      .from('profiles')
-      .update({
-        full_name: profileData.name || null,
-        bio: profileData.bio || null,
-        updated_at: new Date().toISOString(),
-      })
-      .eq('user_id', profileData.user_id)
-      .select()
+    // Get user password hash from Supabase
+    const { data: user, error: userError } = await supabase
+      .from('users')
+      .select('password_hash')
+      .eq('email', email)
       .single()
 
-    if (error || !data) {
-      return NextResponse.json({ error: 'Profile not found or update failed' }, { status: 404 })
+    if (userError || !user) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
 
-    return NextResponse.json({ message: 'Profile updated successfully', profile: data })
+    const isValid = await bcrypt.compare(oldPassword, user.password_hash)
+    if (!isValid) {
+      return NextResponse.json({ error: 'Old password is incorrect' }, { status: 401 })
+    }
+
+    // Hash new password and update
+    const newHash = await bcrypt.hash(newPassword, 10)
+    const { error: updateError } = await supabase
+      .from('users')
+      .update({ password_hash: newHash })
+      .eq('email', email)
+
+    if (updateError) {
+      console.error('Error updating password:', updateError)
+      return NextResponse.json({ error: 'Failed to update password' }, { status: 500 })
+    }
+
+    return NextResponse.json({ message: 'Password changed successfully' })
   } catch (error) {
-    console.error('Error updating profile:', error)
+    console.error('Error changing password:', error)
     return NextResponse.json({ error: 'Invalid request' }, { status: 400 })
   }
 }
