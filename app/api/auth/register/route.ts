@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { query } from 'lib/db'
+import { supabase } from 'lib/supabaseClient'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 
@@ -14,8 +14,13 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if user exists
-    const existingUser = await query('SELECT id FROM users WHERE email = $1', [email])
-    if (existingUser.rowCount > 0) {
+    const { data: existingUser, error: existingUserError } = await supabase
+      .from('users')
+      .select('id')
+      .eq('email', email)
+      .single()
+
+    if (existingUserError === null && existingUser) {
       return NextResponse.json({ error: 'User already exists' }, { status: 409 })
     }
 
@@ -23,7 +28,14 @@ export async function POST(request: NextRequest) {
     const passwordHash = await bcrypt.hash(password, 10)
 
     // Insert user
-    await query('INSERT INTO users (email, password_hash) VALUES ($1, $2)', [email, passwordHash])
+    const { error: insertError } = await supabase
+      .from('users')
+      .insert([{ email, password_hash: passwordHash }])
+
+    if (insertError) {
+      console.error(insertError)
+      return NextResponse.json({ error: 'Failed to register user' }, { status: 500 })
+    }
 
     // Generate JWT token
     const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: '1h' })
