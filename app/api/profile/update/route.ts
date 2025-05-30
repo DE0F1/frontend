@@ -15,6 +15,7 @@ export async function PUT(request: NextRequest) {
       .update({
         full_name: profileData.name || null,
         bio: profileData.bio || null,
+        avatar_url: profileData.avatar_url || null,
         updated_at: new Date().toISOString(),
       })
       .eq('user_id', profileData.user_id)
