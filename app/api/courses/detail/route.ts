@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { query } from 'lib/db'
+import { supabase } from 'lib/supabaseClient'
 
 export async function GET(request: NextRequest) {
   try {
@@ -10,13 +10,17 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Missing course id' }, { status: 400 })
     }
 
-    const result = await query('SELECT id, title, description FROM courses WHERE id = $1', [id])
+    const { data, error } = await supabase
+      .from('courses')
+      .select('id, title, description')
+      .eq('id', id)
+      .single()
 
-    if (result.rowCount === 0) {
+    if (error || !data) {
       return NextResponse.json({ error: 'Course not found' }, { status: 404 })
     }
 
-    return NextResponse.json({ course: result.rows[0] })
+    return NextResponse.json({ course: data })
   } catch (error) {
     console.error('Error fetching course detail:', error)
     return NextResponse.json({ error: 'Failed to fetch course detail' }, { status: 500 })
