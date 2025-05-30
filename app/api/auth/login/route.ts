@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { query } from 'lib/db'
+import { supabase } from 'lib/supabaseClient'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 
@@ -13,13 +13,18 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Missing email or password' }, { status: 400 })
     }
 
-    // Find user by email
-    const result = await query('SELECT id, email, password_hash FROM users WHERE email = $1', [email])
-    if (result.rowCount === 0) {
+    // Find user by email using Supabase
+    const { data, error } = await supabase
+      .from('users')
+      .select('id, email, password_hash')
+      .eq('email', email)
+      .single()
+
+    if (error || !data) {
       return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 })
     }
 
-    const user = result.rows[0]
+    const user = data
 
     // Compare password
     const isValid = await bcrypt.compare(password, user.password_hash)
