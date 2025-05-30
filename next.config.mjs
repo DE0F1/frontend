@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Для статического экспорта на Beget
-  output: 'export',
+  output: 'standalone' ,// Для деплоя на Render
   trailingSlash: true,
   distDir: 'out',
   
