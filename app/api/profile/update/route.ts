@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { query } from 'lib/db'
+import { supabase } from 'lib/supabaseClient'
 
 export async function PUT(request: NextRequest) {
   try {
@@ -9,17 +9,23 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: 'Missing profile data' }, { status: 400 })
     }
 
-    // Update profile in DB
-    const result = await query(
-      'UPDATE profiles SET name = $1, bio = $2 WHERE email = $3 RETURNING *',
-      [profileData.name || null, profileData.bio || null, profileData.email]
-    )
+    // Update profile in Supabase
+    const { data, error } = await supabase
+      .from('profiles')
+      .update({
+        full_name: profileData.name || null,
+        bio: profileData.bio || null,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('user_id', profileData.user_id)
+      .select()
+      .single()
 
-    if (result.rowCount === 0) {
-      return NextResponse.json({ error: 'Profile not found' }, { status: 404 })
+    if (error || !data) {
+      return NextResponse.json({ error: 'Profile not found or update failed' }, { status: 404 })
     }
 
-    return NextResponse.json({ message: 'Profile updated successfully', profile: result.rows[0] })
+    return NextResponse.json({ message: 'Profile updated successfully', profile: data })
   } catch (error) {
     console.error('Error updating profile:', error)
     return NextResponse.json({ error: 'Invalid request' }, { status: 400 })
