@@ -289,35 +289,7 @@ export default function CourseDetailPageClient() {
             </Tabs>
           </div>
 
-          {/* Боковая панель */}
-          <div className="space-y-6">
-            <Card className="border-red-100">
-              <CardContent className="p-6">
-                {enrolled ? (
-                  <div className="space-y-4">
-                    <div className="text-center">
-                      <Award className="h-12 w-12 text-green-600 mx-auto mb-2" />
-                      <h3 className="font-semibold text-gray-800">Вы записаны на курс</h3>
-                      <p className="text-sm text-gray-600">Продолжайте обучение</p>
-                    </div>
-                    <Progress value={course.progress || 0} className="w-full" />
-                    <p className="text-sm text-gray-600 text-center">Прогресс: {course.progress || 0}%</p>
-                    <Button className="w-full bg-green-600 hover:bg-green-700">Продолжить обучение</Button>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    <div className="text-center">
-                      <BookOpen className="h-12 w-12 text-red-600 mx-auto mb-2" />
-                      <h3 className="font-semibold text-gray-800">Начните изучение</h3>
-                      <p className="text-sm text-gray-600">Присоединяйтесь к курсу</p>
-                    </div>
-                    <Button onClick={handleEnroll} className="w-full bg-red-600 hover:bg-red-700">
-                      Записаться на курс
-                    </Button>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+         
 
             <Card className="border-red-100">
               <CardHeader>
