@@ -210,7 +210,7 @@ export default function CourseDetailPageClient() {
                               </div>
                             </div>
                           </div>
-                          {/*
+                          {
                           {enrolled && (
                             <Button size="sm" variant="outline" asChild>
                               <a
@@ -222,7 +222,7 @@ export default function CourseDetailPageClient() {
                               </a>
                             </Button>
                           )}
-                          */}
+                          }
                         </div>
                       ))}
                     </div>
