@@ -133,7 +133,7 @@ export default function CourseDetailPageClient() {
   }
 
   return (
-      <Header user={user} setUser={setUser} />
+      <Header user={user} setUser={setUser} />,
 
     
           {/* Основная информация */}
