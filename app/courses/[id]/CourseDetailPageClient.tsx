@@ -88,6 +88,7 @@ export default function CourseDetailPageClient() {
   const [user, setUser] = useState<any>(null)
   const [course, setCourse] = useState<any>(null)
   const [loading, setLoading] = useState(true)
+  const [enrolled, setEnrolled] = useState(false)
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("user") || "{}")
@@ -108,6 +109,7 @@ export default function CourseDetailPageClient() {
       window.location.href = "/login"
       return
     }
+    setEnrolled(true)
   }
 
   if (loading) {
@@ -133,9 +135,15 @@ export default function CourseDetailPageClient() {
   }
 
   return (
-      <Header user={user} setUser={setUser} />,
-
-    
+    <div className="min-h-screen bg-gradient-to-br from-red-50 to-rose-100">
+      <Header user={user} setUser={setUser} />
+      <div className="container mx-auto px-4 py-8">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+          className="grid lg:grid-cols-3 gap-8"
+        >
           {/* Основная информация */}
           <div className="lg:col-span-2 space-y-6">
             <Card className="border-red-100">
@@ -204,7 +212,6 @@ export default function CourseDetailPageClient() {
                               </div>
                             </div>
                           </div>
-                          {
                           {enrolled && (
                             <Button size="sm" variant="outline" asChild>
                               <a
@@ -216,7 +223,6 @@ export default function CourseDetailPageClient() {
                               </a>
                             </Button>
                           )}
-                          }
                         </div>
                       ))}
                     </div>
@@ -280,6 +286,31 @@ export default function CourseDetailPageClient() {
             </Tabs>
           </div>
 
+          {/* Боковая панель */}
+          <div className="space-y-6">
+            <Card className="border-red-100">
+              <CardHeader>
+                <CardTitle>Прогресс курса</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span>Прогресс</span>
+                    <span>{course.progress}%</span>
+                  </div>
+                  <Progress value={course.progress} className="h-2" />
+                </div>
+                {enrolled ? (
+                  <Button className="w-full" variant="default">
+                    Продолжить обучение
+                  </Button>
+                ) : (
+                  <Button className="w-full" variant="default" onClick={handleEnroll}>
+                    Записаться на курс
+                  </Button>
+                )}
+              </CardContent>
+            </Card>
 
             <Card className="border-red-100">
               <CardHeader>
