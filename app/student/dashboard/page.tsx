@@ -13,8 +13,8 @@ import Link from "next/link"
 
 export default function StudentDashboard() {
   const [user, setUser] = useState<any>(null)
-  const [courses, setCourses] = useState([])
-  const [grades, setGrades] = useState([])
+  const [courses, setCourses] = useState<any[]>([])
+  const [grades, setGrades] = useState<any[]>([])
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("user") || "{}")
@@ -98,9 +98,11 @@ export default function StudentDashboard() {
                               )}
                               <span className="text-sm">{lecture.title}</span>
                             </div>
-                            <Button size="sm" variant="outline">
-                              Открыть
-                            </Button>
+                  <Button size="sm" variant="outline" asChild>
+                    <a href="/courses/1" target="_blank" rel="noopener noreferrer">
+                      Открыть
+                    </a>
+                  </Button>
                           </div>
                         ))}
                       </div>
