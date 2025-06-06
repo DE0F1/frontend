@@ -104,7 +104,10 @@ export default function CourseDetailPageClient() {
   }, [params.id])
 
   const handleEnroll = async () => {
-    // Removed enrollment logic as per user request
+    if (!user) {
+      window.location.href = "/login"
+      return
+    }
   }
 
   if (loading) {
@@ -207,6 +210,7 @@ export default function CourseDetailPageClient() {
                               </div>
                             </div>
                           </div>
+                          {/*
                           {enrolled && (
                             <Button size="sm" variant="outline" asChild>
                               <a
@@ -218,6 +222,7 @@ export default function CourseDetailPageClient() {
                               </a>
                             </Button>
                           )}
+                          */}
                         </div>
                       ))}
                     </div>
@@ -283,6 +288,20 @@ export default function CourseDetailPageClient() {
 
           {/* Боковая панель */}
           <div className="space-y-6">
+            <Card className="border-red-100">
+              <CardContent className="p-6">
+                <div className="space-y-4">
+                  <div className="text-center">
+                    <BookOpen className="h-12 w-12 text-red-600 mx-auto mb-2" />
+                    <h3 className="font-semibold text-gray-800">Начните изучение</h3>
+                    <p className="text-sm text-gray-600">Присоединяйтесь к курсу</p>
+                  </div>
+                  <Button onClick={handleEnroll} className="w-full bg-red-600 hover:bg-red-700">
+                    Записаться на курс
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
 
             <Card className="border-red-100">
               <CardHeader>
