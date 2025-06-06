@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { BookOpen, Clock, Users, Star, Play, FileText, Award } from "lucide-react"
+import { BookOpen, Clock, Users, Star, Play, FileText } from "lucide-react"
 import Header from "@/components/header"
 
 // Статические данные для экспорта
@@ -88,7 +88,6 @@ export default function CourseDetailPageClient() {
   const [user, setUser] = useState<any>(null)
   const [course, setCourse] = useState<any>(null)
   const [loading, setLoading] = useState(true)
-  const [enrolled, setEnrolled] = useState(false)
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("user") || "{}")
@@ -100,19 +99,15 @@ export default function CourseDetailPageClient() {
 
     if (courseData) {
       setCourse(courseData)
-      if (user && [1, 2].includes(courseData.id)) {
-        setEnrolled(true)
-      }
     }
     setLoading(false)
-  }, [params.id, user])
+  }, [params.id])
 
   const handleEnroll = async () => {
     if (!user) {
       window.location.href = "/login"
       return
     }
-    setEnrolled(true)
   }
 
   if (loading) {
@@ -215,6 +210,7 @@ export default function CourseDetailPageClient() {
                               </div>
                             </div>
                           </div>
+                          {/*
                           {enrolled && (
                             <Button size="sm" variant="outline" asChild>
                               <a
@@ -226,6 +222,7 @@ export default function CourseDetailPageClient() {
                               </a>
                             </Button>
                           )}
+                          */}
                         </div>
                       ))}
                     </div>
@@ -289,33 +286,20 @@ export default function CourseDetailPageClient() {
             </Tabs>
           </div>
 
-         {/* Боковая панель */}
+          {/* Боковая панель */}
           <div className="space-y-6">
             <Card className="border-red-100">
               <CardContent className="p-6">
-                {enrolled ? (
-                  <div className="space-y-4">
-                    <div className="text-center">
-                      <Award className="h-12 w-12 text-green-600 mx-auto mb-2" />
-                      <h3 className="font-semibold text-gray-800">Вы записаны на курс</h3>
-                      <p className="text-sm text-gray-600">Продолжайте обучение</p>
-                    </div>
-                    <Progress value={course.progress || 0} className="w-full" />
-                    <p className="text-sm text-gray-600 text-center">Прогресс: {course.progress || 0}%</p>
-                    <Button className="w-full bg-green-600 hover:bg-green-700">Продолжить обучение</Button>
+                <div className="space-y-4">
+                  <div className="text-center">
+                    <BookOpen className="h-12 w-12 text-red-600 mx-auto mb-2" />
+                    <h3 className="font-semibold text-gray-800">Начните изучение</h3>
+                    <p className="text-sm text-gray-600">Присоединяйтесь к курсу</p>
                   </div>
-                ) : (
-                  <div className="space-y-4">
-                    <div className="text-center">
-                      <BookOpen className="h-12 w-12 text-red-600 mx-auto mb-2" />
-                      <h3 className="font-semibold text-gray-800">Начните изучение</h3>
-                      <p className="text-sm text-gray-600">Присоединяйтесь к курсу</p>
-                    </div>
-                    <Button onClick={handleEnroll} className="w-full bg-red-600 hover:bg-red-700">
-                      Записаться на курс
-                    </Button>
-                  </div>
-                )}
+                  <Button onClick={handleEnroll} className="w-full bg-red-600 hover:bg-red-700">
+                    Записаться на курс
+                  </Button>
+                </div>
               </CardContent>
             </Card>
 
