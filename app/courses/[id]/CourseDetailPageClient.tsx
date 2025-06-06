@@ -133,7 +133,6 @@ export default function CourseDetailPageClient() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 to-rose-100">
       <Header user={user} setUser={setUser} />
 
     
