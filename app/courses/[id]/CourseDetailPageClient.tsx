@@ -104,10 +104,7 @@ export default function CourseDetailPageClient() {
   }, [params.id])
 
   const handleEnroll = async () => {
-    if (!user) {
-      window.location.href = "/login"
-      return
-    }
+    // Removed enrollment logic as per user request
   }
 
   if (loading) {
@@ -210,7 +207,6 @@ export default function CourseDetailPageClient() {
                               </div>
                             </div>
                           </div>
-                          {/*
                           {enrolled && (
                             <Button size="sm" variant="outline" asChild>
                               <a
@@ -222,7 +218,6 @@ export default function CourseDetailPageClient() {
                               </a>
                             </Button>
                           )}
-                          */}
                         </div>
                       ))}
                     </div>
