@@ -136,12 +136,7 @@ export default function CourseDetailPageClient() {
     <div className="min-h-screen bg-gradient-to-br from-red-50 to-rose-100">
       <Header user={user} setUser={setUser} />
 
-      <div className="container mx-auto px-4 py-8">
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="grid grid-cols-1 lg:grid-cols-3 gap-8"
-        >
+    
           {/* Основная информация */}
           <div className="lg:col-span-2 space-y-6">
             <Card className="border-red-100">
