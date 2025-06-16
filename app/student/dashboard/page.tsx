@@ -175,6 +175,7 @@ export default function StudentDashboard() {
                         <th className="text-left p-2">Тест</th>
                         <th className="text-left p-2">Оценка</th>
                         <th className="text-left p-2">Дата</th>
+ <th className="text-left p-2">ФИО</th>
                       </tr>
                     </thead>
                     <tbody>
